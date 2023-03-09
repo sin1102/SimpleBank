@@ -3,40 +3,40 @@ CREATE TABLE "accounts" (
   "owner" varchar NOT NULL,
   "balance" bigint NOT NULL,
   "currency" varchar NOT NULL,
-  "created_at" timestamptz NOT NULL DEFAULT 'now()'
+  "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
-CREATE TABLE "entry" (
+CREATE TABLE "entries" (
   "id" bigserial PRIMARY KEY,
-  "accounts_id" bigint NOT NULL,
+  "account_id" bigint NOT NULL,
   "amount" bigint NOT NULL,
-  "created_at" timestamptz NOT NULL DEFAULT 'now()'
+  "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
-CREATE TABLE "transfer" (
+CREATE TABLE "transfers" (
   "id" bigserial PRIMARY KEY,
-  "from_accounts_id" bigint NOT NULL,
-  "to_accounts_id" bigint NOT NULL,
+  "from_account_id" bigint NOT NULL,
+  "to_account_id" bigint NOT NULL,
   "amount" bigint NOT NULL,
-  "created_at" timestamptz NOT NULL DEFAULT 'now()'
+  "created_at" timestamptz NOT NULL DEFAULT (now())
 );
+
+ALTER TABLE "entries" ADD FOREIGN KEY ("account_id") REFERENCES "accounts" ("id");
+
+ALTER TABLE "transfers" ADD FOREIGN KEY ("from_account_id") REFERENCES "accounts" ("id");
+
+ALTER TABLE "transfers" ADD FOREIGN KEY ("to_account_id") REFERENCES "accounts" ("id");
 
 CREATE INDEX ON "accounts" ("owner");
 
-CREATE INDEX ON "entry" ("accounts_id");
+CREATE INDEX ON "entries" ("account_id");
 
-CREATE INDEX ON "transfer" ("to_accounts_id");
+CREATE INDEX ON "transfers" ("from_account_id");
 
-CREATE INDEX ON "transfer" ("from_accounts_id");
+CREATE INDEX ON "transfers" ("to_account_id");
 
-CREATE INDEX ON "transfer" ("to_accounts_id", "from_accounts_id");
+CREATE INDEX ON "transfers" ("from_account_id", "to_account_id");
 
-COMMENT ON COLUMN "entry"."amount" IS 'can be positive or negative';
+COMMENT ON COLUMN "entries"."amount" IS 'can be negative or positive';
 
-COMMENT ON COLUMN "transfer"."amount" IS 'must be positive';
-
-ALTER TABLE "entry" ADD FOREIGN KEY ("accounts_id") REFERENCES "accounts" ("id");
-
-ALTER TABLE "transfer" ADD FOREIGN KEY ("from_accounts_id") REFERENCES "accounts" ("id");
-
-ALTER TABLE "transfer" ADD FOREIGN KEY ("to_accounts_id") REFERENCES "accounts" ("id");
+COMMENT ON COLUMN "transfers"."amount" IS 'must be positive';
