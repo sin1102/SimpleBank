@@ -2,7 +2,6 @@ package db
 
 import (
 	"database/sql"
-	db "learn/banking/db/sqlc"
 	"learn/banking/utils"
 	"log"
 	"os"
@@ -11,7 +10,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var testQueries *db.Queries
+var testQueries *Queries
 var testDB *sql.DB
 
 func TestMain(m *testing.M) {
@@ -26,7 +25,7 @@ func TestMain(m *testing.M) {
 		log.Fatal("cannot connect to db:", err)
 	}
 
-	testQueries = db.New(testDB)
+	testQueries = New(testDB)
 
 	os.Exit(m.Run())
 }

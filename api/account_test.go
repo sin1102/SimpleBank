@@ -1,8 +1,8 @@
 package api
 
 import (
+	"bytes"
 	"fmt"
-	"learn/banking/api"
 	mockdb "learn/banking/db/mock"
 	db "learn/banking/db/sqlc"
 	"learn/banking/utils"
@@ -27,7 +27,7 @@ func TestGetAccountAPI(t *testing.T) {
 		Times(1).
 		Return(account, nil)
 
-	server := api.NewServer(store)
+	server := NewServer(store)
 	recoder := httptest.NewRecorder()
 
 	url := fmt.Sprintf("/account/%d", account.ID)
@@ -46,4 +46,8 @@ func randomAccount() db.Account {
 		Currency: utils.RandomCurrency(),
 		Balance:  utils.RandomMoney(),
 	}
+}
+
+func requireBodyMatchAccount(t *testing.T, body *bytes.Buffer, account db.Account) {
+
 }
