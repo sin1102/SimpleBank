@@ -3,14 +3,13 @@ package db
 import (
 	"context"
 	"fmt"
-	db "learn/banking/db/sqlc"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
 
 func TestTransferTx(t *testing.T) {
-	store := db.NewStore(testDB)
+	store := NewStore(testDB)
 
 	account1 := createRandomAccount(t)
 	account2 := createRandomAccount(t)
@@ -21,11 +20,11 @@ func TestTransferTx(t *testing.T) {
 	amount := int64(10)
 
 	errs := make(chan error)
-	results := make(chan db.TransferTxResult)
+	results := make(chan TransferTxResult)
 
 	for i := 0; i < n; i++ {
 		go func() {
-			result, err := store.TransferTx(context.Background(), db.TransferTxParams{
+			result, err := store.TransferTx(context.Background(), TransferTxParams{
 				FromAccountId: account1.ID,
 				ToAccountId:   account2.ID,
 				Amount:        amount,

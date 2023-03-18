@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	db "learn/banking/db/sqlc"
 	"learn/banking/utils"
 	"testing"
 	"time"
@@ -10,8 +9,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func createRandomTransfer(t *testing.T, account1 db.Account, account2 db.Account) db.Transfer {
-	arg := db.CreateTransferParams{
+func createRandomTransfer(t *testing.T, account1 Account, account2 Account) Transfer {
+	arg := CreateTransferParams{
 		FromAccountID: account1.ID,
 		ToAccountID:   account2.ID,
 		Amount:        utils.RandomMoney(),
@@ -61,7 +60,7 @@ func TestListTransfer(t *testing.T) {
 		createRandomTransfer(t, account2, account1)
 	}
 
-	arg := db.ListTransfersParams{
+	arg := ListTransfersParams{
 		FromAccountID: account1.ID,
 		ToAccountID:   account1.ID,
 		Limit:         5,
